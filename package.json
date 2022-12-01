@@ -1,0 +1,15 @@
+{
+  "name": "neopro-desafio-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Desafio técnico da neopro.",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Gabriel Alves de Lisboa",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
