@@ -1,12 +1,18 @@
 import got from 'got';
 import moment from 'moment';
-import { insertSales } from './models.js';
+import { insertSales, getSalesByMonth } from './models.js';
 
 export async function populateSalesDbByMonthService(date) {
   const sales = await getApiSales(date);
   const salesByDay = reduceSalesByDay(sales);
 
   await insertSales(salesByDay);
+}
+
+export async function getSalesByMonthService(date) {
+  const sales = await getSalesByMonth(date);
+
+  return groupSalesByDate(sales);
 }
 
 async function getApiSales(date) {
@@ -34,4 +40,22 @@ function reduceSalesByDay(sales) {
   }, {});
 
   return Object.keys(salesByDay).map((date) => salesByDay[date]);
+}
+
+function groupSalesByDate(sales) {
+  const sellersByDate = sales.reduce((acc, sale) => {
+    if (!(sale.date in acc)) {
+      acc[sale.date] = [];
+    }
+
+    acc[sale.date].push({
+      seller: sale.seller,
+      sold: sale.sold,
+      sales: sale.sales,
+    });
+
+    return acc;
+  }, {});
+
+  return Object.keys(sellersByDate).map((date) => ({ date, sellers: sellersByDate[date] }));
 }
