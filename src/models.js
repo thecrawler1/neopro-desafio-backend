@@ -11,3 +11,17 @@ export async function insertSales(sales) {
     
   await client.close();
 }
+
+export async function getSalesByMonth(date) {
+  await client.connect();
+
+  const sales = await client
+    .db(dbName)
+    .collection('sales')
+    .find({ date: { $regex: `^${date.substring(0, 7)}` } })
+    .toArray();
+
+  await client.close();
+
+  return sales;
+}
